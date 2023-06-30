@@ -22,7 +22,29 @@ export class GithubActionsService {
     try {
       const workflow_id = 'terraform_apply.yml';
       const ref = 'main';
-      console.log({ owner, repo, workflow_id, ref });
+      const response = await this.octokit.actions.createWorkflowDispatch({
+        owner,
+        repo,
+        workflow_id,
+        ref,
+        inputs: {
+          app_config: JSON.stringify(applicationConfig),
+          app_id: applicationId,
+        },
+      });
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async triggerDestroyWorkflow(
+    applicationConfig: { [key: string]: any },
+    applicationId: string,
+  ) {
+    try {
+      const workflow_id = 'terraform_destroy.yml';
+      const ref = 'main';
       const response = await this.octokit.actions.createWorkflowDispatch({
         owner,
         repo,

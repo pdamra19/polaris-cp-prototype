@@ -51,7 +51,7 @@ jobs:
       run: terraform validate
 
     - name: Terraform Plan Destroy
-      run: terraform plan -destroy -var-file="application.tfvars.json"
+      run: terraform plan -destroy
 
     - name: Terraform Apply Destroy
       run: terraform destroy -auto-approve
