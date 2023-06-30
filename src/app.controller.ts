@@ -17,22 +17,22 @@ export class AppController {
       VizVectar: {
         component_id: 'viz1',
         instance_type: 't2.micro',
-        ami: 'ami-0abcdef1234567890',
+        ami: 'ami-003d3d03cfe1b0468',
       },
       Chyron: {
         component_id: 'chyron1',
         instance_type: 't2.micro',
-        ami: 'ami-0abcdef1234567890',
+        ami: 'ami-003d3d03cfe1b0468',
       },
       TagVS: {
         component_id: 'tagvs1',
         instance_type: 't2.micro',
-        ami: 'ami-0abcdef1234567890',
+        ami: 'ami-003d3d03cfe1b0468',
       },
       Telos: {
         component_id: 'telos1',
         instance_type: 't2.micro',
-        ami: 'ami-0abcdef1234567890',
+        ami: 'ami-003d3d03cfe1b0468',
       },
     };
     await this.ghActionsService.triggerApplyWorkflow(exampleConfig, uuidv4());
