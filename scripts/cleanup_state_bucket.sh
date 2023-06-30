@@ -15,3 +15,5 @@ aws s3api delete-bucket --bucket $bucket_name --region $aws_region
 
 # Delete the DynamoDB table
 aws dynamodb delete-table --table-name $dynamodb_table_name --region $aws_region
+
+echo "::set-output name=${bucket_name}::$bucket_name"
