@@ -4,8 +4,8 @@ application_id=$1
 aws_account_id=$(aws sts get-caller-identity --query Account --output text)
 aws_region='us-east-1'
 
-bucket_name="polaris-${application_id}-${aws_account_id}-tf-state"
-table_name="polaris-${application_id}-${aws_account_id}-tf-lock"
+bucket_name="polaris-${application_id}-${aws_account_id}-tf-s3"
+table_name="polaris-${application_id}-${aws_account_id}-tf-ddb"
 
 # Check if bucket exists
 bucket_exists=$(aws s3api head-bucket --bucket $bucket_name 2>&1 || true)
