@@ -36,7 +36,7 @@ variable "app_id" {
 }
 
 resource "aws_instance" "web" {
-  for_each = var.apps
+  for_each = var.app_config
 
   ami           = each.value.ami
   instance_type = each.value.instance_type
