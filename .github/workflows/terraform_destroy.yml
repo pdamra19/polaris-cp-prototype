@@ -21,6 +21,10 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
+    
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
     - name: Checkout
