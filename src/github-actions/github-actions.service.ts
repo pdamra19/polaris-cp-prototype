@@ -7,31 +7,6 @@ const {
   GITHUB_TOKEN: auth = '',
 } = process.env;
 
-export const exampleConfig = {
-  VizVectar: {
-    component_id: 'viz1',
-    instance_type: 't2.micro',
-    ami: 'ami-0abcdef1234567890',
-  },
-  Chyron: {
-    component_id: 'chyron1',
-    instance_type: 't2.micro',
-    ami: 'ami-0abcdef1234567890',
-  },
-  TagVS: {
-    component_id: 'tagvs1',
-    instance_type: 't2.micro',
-    ami: 'ami-0abcdef1234567890',
-  },
-  Telos: {
-    component_id: 'telos1',
-    instance_type: 't2.micro',
-    ami: 'ami-0abcdef1234567890',
-  },
-};
-
-export const exampleAppId = '024b8e6a-53d1-4c1a-8c28-6862938b73c0';
-
 @Injectable()
 export class GithubActionsService {
   private octokit: Octokit;
@@ -41,7 +16,7 @@ export class GithubActionsService {
   }
 
   async triggerApplyWorkflow(
-    applications: { [key: string]: any },
+    applicationConfig: { [key: string]: any },
     applicationId: string,
   ) {
     try {
@@ -54,7 +29,7 @@ export class GithubActionsService {
         workflow_id,
         ref,
         inputs: {
-          app_config: JSON.stringify(exampleConfig),
+          app_config: JSON.stringify(applicationConfig),
           app_id: applicationId,
         },
       });
