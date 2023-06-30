@@ -30,7 +30,7 @@ export const exampleConfig = {
   },
 };
 
-export const exampleAppId = '024b8e6a-53d1-4c1a-8c28-6862938b73cd';
+export const exampleAppId = '024b8e6a-53d1-4c1a-8c28-6862938b73c0';
 
 @Injectable()
 export class GithubActionsService {

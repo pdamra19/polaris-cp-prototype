@@ -16,8 +16,7 @@ else
   echo "Bucket $bucket_name does not exist, creating..."
   aws s3api create-bucket \
     --bucket $bucket_name \
-    --region $aws_region \
-    --create-bucket-configuration LocationConstraint=$aws_region
+    --region $aws_region
 fi
 
 # Check if DynamoDB table exists
