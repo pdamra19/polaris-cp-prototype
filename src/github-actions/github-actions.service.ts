@@ -7,28 +7,30 @@ const {
   GITHUB_TOKEN: auth = '',
 } = process.env;
 
-export const exampleParams = {
+export const exampleConfig = {
   VizVectar: {
-    application_id: 'viz1',
+    component_id: 'viz1',
     instance_type: 't2.micro',
     ami: 'ami-0abcdef1234567890',
   },
   Chyron: {
-    application_id: 'chyron1',
+    component_id: 'chyron1',
     instance_type: 't2.micro',
     ami: 'ami-0abcdef1234567890',
   },
   TagVS: {
-    application_id: 'tagvs1',
+    component_id: 'tagvs1',
     instance_type: 't2.micro',
     ami: 'ami-0abcdef1234567890',
   },
   Telos: {
-    application_id: 'telos1',
+    component_id: 'telos1',
     instance_type: 't2.micro',
     ami: 'ami-0abcdef1234567890',
   },
 };
+
+export const exampleAppId = '024b8e6a-53d1-4c1a-8c28-6862938b73cd';
 
 @Injectable()
 export class GithubActionsService {
@@ -38,7 +40,10 @@ export class GithubActionsService {
     this.octokit = new Octokit({ auth });
   }
 
-  async triggerApplyWorkflow(applications: { [key: string]: any }) {
+  async triggerApplyWorkflow(
+    applications: { [key: string]: any },
+    applicationId: string,
+  ) {
     try {
       const workflow_id = 'terraform_apply.yml';
       const ref = 'main';
@@ -49,7 +54,8 @@ export class GithubActionsService {
         workflow_id,
         ref,
         inputs: {
-          applications: JSON.stringify(applications),
+          app_config: JSON.stringify(exampleConfig),
+          app_id: applicationId,
         },
       });
       console.log(response);

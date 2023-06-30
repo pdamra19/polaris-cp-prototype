@@ -3,15 +3,16 @@ name: 'Terraform Destroy'
 on:
   workflow_dispatch:
     inputs:
-      awsAccountId:
-        description: 'AWS Account Id'
+      app_id: 
+        description: 'Application ID'
         required: true
-      awsRegion:
-        description: 'AWS Region'
+      app_config:
+        description: 'Application config JSON'
         required: true
-      applicationId:
-        description: 'Application Id'
-        required: true
+
+env:
+  TF_VAR_app_id: ${{ github.event.inputs.app_id }}
+  TF_VAR_app_config: ${{ github.event.inputs.app_config }}
 
 jobs:
   terraform:
@@ -34,8 +35,6 @@ jobs:
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: 0.12.x
 
     - name: Terraform Init
       run: terraform init
@@ -47,7 +46,7 @@ jobs:
       run: terraform plan -destroy -var-file="application.tfvars.json"
 
     - name: Terraform Apply Destroy
-      run: terraform destroy -auto-approve -var-file="application.tfvars.json"
+      run: terraform destroy -auto-approve
 
     - name: Cleanup S3 Bucket and DynamoDB Table
-      run: bash ./scripts/cleanup_resources.sh ${{ github.event.inputs.applicationId }} ${{ github.event.inputs.awsAccountId }} ${{ github.event.inputs.awsRegion }}
+      run: bash ./scripts/cleanup_state_bucket.sh  ${{ github.event.inputs.app_id }}

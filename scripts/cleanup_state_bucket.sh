@@ -1,8 +1,8 @@
 #!/bin/bash
 
 application_id=$1
-aws_account_id=$2
-aws_region=$3
+aws_account_id=$(aws sts get-caller-identity --query Account --output text)
+aws_region='us-east-1'
 
 bucket_name="polaris-${application_id}-${aws_account_id}-tf-state"
 dynamodb_table_name="polaris-${application_id}-${aws_account_id}-tf-lock"

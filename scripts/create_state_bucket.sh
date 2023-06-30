@@ -1,22 +1,36 @@
 #!/bin/bash
 
-# Fail script on any error
-set -e
+application_id=$1
+aws_account_id=$(aws sts get-caller-identity --query Account --output text)
+aws_region='us-east-1'
 
-# Input arguments
-APP_ID=$1
-AWS_REGION=$2
+bucket_name="polaris-${application_id}-${aws_account_id}-tf-state"
+dynamodb_table_name="polaris-${application_id}-${aws_account_id}-tf-lock"
 
-# Get AWS account id
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+# Check if bucket exists
+bucket_exists=$(aws s3api head-bucket --bucket $bucket_name 2>&1 || true)
 
-# Define the bucket name
-BUCKET_NAME="polaris-${APP_ID}-${AWS_ACCOUNT_ID}-tf-state"
-
-# Check if the S3 bucket exists and create if it does not
-if ! aws s3api head-bucket --bucket $BUCKET_NAME 2>/dev/null; then
-  echo "Bucket does not exist, creating..."
-  aws s3api create-bucket --bucket $BUCKET_NAME --region $AWS_REGION --create-bucket-configuration LocationConstraint=$AWS_REGION
+if [ -z "$bucket_exists" ]; then
+  echo "Bucket $bucket_name already exists"
 else
-  echo "Bucket exists"
+  echo "Bucket $bucket_name does not exist, creating..."
+  aws s3api create-bucket \
+    --bucket $bucket_name \
+    --region $aws_region \
+    --create-bucket-configuration LocationConstraint=$aws_region
+fi
+
+# Check if DynamoDB table exists
+table_exists=$(aws dynamodb describe-table --table-name $dynamodb_table_name --region $aws_region 2>&1 || true)
+
+if [[ $table_exists != *"ResourceNotFoundException"* ]]; then
+  echo "DynamoDB Table $dynamodb_table_name already exists"
+else
+  echo "DynamoDB Table $dynamodb_table_name does not exist, creating..."
+  aws dynamodb create-table \
+    --table-name $dynamodb_table_name \
+    --attribute-definitions AttributeName=LockID,AttributeType=S \
+    --key-schema AttributeName=LockID,KeyType=HASH \
+    --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
+    --region $aws_region
 fi

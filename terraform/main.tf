@@ -21,26 +21,61 @@ provider "aws" {
   region = "us-east-1"
 }
 
-module "VizVectar" {
-  source    = "./module"
-  app_id    = var.applications["VizVectar"]
-  instance_type = var.instance_type
+variable "app_config" {
+  type = map(object({
+    component_id = string
+    instance_type  = string
+    ami            = string
+  }))
+  description = "Map of applications to be deployed"
 }
 
-module "Chyron" {
-  source    = "./module"
-  app_id    = var.applications["Chyron"]
-  instance_type = var.instance_type
+variable "app_id" {
+  type = string
+  description = "ID for this deployed application"
 }
 
-module "TagVS" {
-  source    = "./module"
-  app_id    = var.applications["TagVS"]
-  instance_type = var.instance_type
+resource "aws_instance" "web" {
+  for_each = var.apps
+
+  ami           = each.value.ami
+  instance_type = each.value.instance_type
+
+  tags = {
+    Name = each.key
+    ComponentId = each.value.component_id
+    ApplicationId = var.app_id
+  }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              apt-get update
+              apt-get install -y apache2
+              sed -i -e 's/80/8080/' /etc/apache2/ports.conf
+              echo "Hello from ${each.value.component_id} in App ${var.app_id}" > /var/www/html/index.html
+              systemctl restart apache2
+              EOF
 }
 
-module "Telos" {
-  source    = "./module"
-  app_id    = var.applications["Telos"]
-  instance_type = var.instance_type
+resource "random_pet" "sg" {}
+
+resource "aws_security_group" "web-sg" {
+  name = "${random_pet.sg.id}-sg"
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  // connectivity to ubuntu mirrors is required to run `apt-get update` and `apt-get install apache2`
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+output "web-address" {
+  value = "${aws_instance.web.public_dns}:8080"
 }

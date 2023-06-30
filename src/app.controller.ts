@@ -2,7 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import {
   GithubActionsService,
-  exampleParams,
+  exampleAppId,
+  exampleConfig,
 } from './github-actions/github-actions.service';
 
 @Controller()
@@ -15,7 +16,10 @@ export class AppController {
   @Get()
   async getHello(): Promise<string> {
     const response = this.appService.getHello();
-    await this.ghActionsService.triggerApplyWorkflow(exampleParams);
+    await this.ghActionsService.triggerApplyWorkflow(
+      exampleConfig,
+      exampleAppId,
+    );
     return response;
   }
 }
