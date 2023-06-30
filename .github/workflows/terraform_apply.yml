@@ -41,7 +41,7 @@ jobs:
       uses: hashicorp/setup-terraform@v2
 
     - name: Check and Create S3 Bucket and DynamoDB Table
-      run: bash ./scripts/create_state_bucket.sh ${{ github.event.inputs.app_id }}
+      run: bash ../scripts/create_state_bucket.sh ${{ github.event.inputs.app_id }}
 
     - name: Terraform Init
       run: terraform init
