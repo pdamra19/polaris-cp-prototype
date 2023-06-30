@@ -77,5 +77,6 @@ resource "aws_security_group" "web-sg" {
 }
 
 output "web-address" {
-  value = "${aws_instance.web[each.key].public_dns}:8080"
+  description = "The Public DNS for each instance"
+  value = { for name, instance in aws_instance.web : name => "${instance.public_dns}:8080" }
 }
