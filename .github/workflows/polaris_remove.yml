@@ -1,4 +1,4 @@
-name: 'Terraform Destroy'
+name: 'Remove Polaris Application'
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./terraform
+        working-directory: "./terrform/${{github.event.inputs.app_env}}"
     
     permissions:
       id-token: write

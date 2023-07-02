@@ -21,7 +21,7 @@ export class GithubActionsService {
     applicationEnvironment = 'aws',
   ) {
     try {
-      const workflow_id = 'terraform_apply.yml';
+      const workflow_id = 'polaris_create.yml';
       const ref = 'main';
       const response = await this.octokit.actions.createWorkflowDispatch({
         owner,
@@ -46,7 +46,7 @@ export class GithubActionsService {
     applicationEnvironment = 'aws',
   ) {
     try {
-      const workflow_id = 'terraform_destroy.yml';
+      const workflow_id = 'polaris_remove.yml';
       const ref = 'main';
       const response = await this.octokit.actions.createWorkflowDispatch({
         owner,

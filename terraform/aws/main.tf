@@ -37,7 +37,7 @@ resource "aws_instance" "web" {
   ami           = each.value.ami
   instance_type = each.value.instance_type
 
-  vpc_security_group_ids = [aws_security_group.web-sg[each.key].id]
+  vpc_security_group_ids = [aws_security_group.web_sg[each.key].id]
 
   tags = {
     ApplicationId = var.app_id
@@ -57,7 +57,7 @@ resource "aws_instance" "web" {
               EOF
 }
 
-resource "aws_security_group" "web-sg" {
+resource "aws_security_group" "web_sg" {
   for_each = var.app_config
 
   name = "${each.key}-${each.value.component_id}-sg"
