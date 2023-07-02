@@ -64,7 +64,9 @@ resource "aws_instance" "web" {
 resource "random_pet" "sg" {}
 
 resource "aws_security_group" "web-sg" {
-  name = "${random_pet.sg.id}-sg"
+  for_each = var.app_config
+
+  name = "${each.key}-${each.value.component_id}-sg"
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -82,6 +84,8 @@ resource "aws_security_group" "web-sg" {
     Name = "Polaris CP"
     Description = "EC2 Instance Security Group"
     ApplicationId = var.app_id
+    ApplicationName = each.key
+    ComponentId = each.value.component_id
   }
 }
 
