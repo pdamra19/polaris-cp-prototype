@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import databaseConfig, { databases } from './common/config/database.config';
 import { TemplatesModule } from './templates/templates.module';
 import { GithubActionsModule } from './github-actions/github-actions.module';
+import { ProductsModule } from './products/products.module';
 
 export const appModuleDocumentation = (app: INestApplication): void => {
   const options = new DocumentBuilder()
@@ -33,6 +34,7 @@ export const appModuleDocumentation = (app: INestApplication): void => {
     }),
     TemplatesModule,
     GithubActionsModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
