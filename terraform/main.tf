@@ -41,7 +41,7 @@ resource "aws_instance" "web" {
   ami           = each.value.ami
   instance_type = each.value.instance_type
 
-  vpc_security_group_ids = [aws_security_group.web-sg.id]
+  vpc_security_group_ids = [aws_security_group.web-sg[each.key].id]
 
   tags = {
     Name = "Polaris CP"
