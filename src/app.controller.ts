@@ -1,5 +1,4 @@
 import { Controller, Delete, Get } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import { AppService } from './app.service';
 import { GithubActionsService } from './github-actions/github-actions.service';
 
