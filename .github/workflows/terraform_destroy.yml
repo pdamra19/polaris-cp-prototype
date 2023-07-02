@@ -3,6 +3,9 @@ name: 'Terraform Destroy'
 on:
   workflow_dispatch:
     inputs:
+      app_env: 
+        description: 'Name of environment, relates to cloud provider, e.g. "aws"'
+        required: true
       app_id: 
         description: 'Application ID'
         required: true

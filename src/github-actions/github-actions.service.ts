@@ -18,6 +18,7 @@ export class GithubActionsService {
   async triggerApplyWorkflow(
     applicationConfig: { [key: string]: any },
     applicationId: string,
+    applicationEnvironment = 'aws',
   ) {
     try {
       const workflow_id = 'terraform_apply.yml';
@@ -29,6 +30,7 @@ export class GithubActionsService {
         ref,
         inputs: {
           app_config: JSON.stringify(applicationConfig),
+          app_env: applicationEnvironment,
           app_id: applicationId,
         },
       });
@@ -41,6 +43,7 @@ export class GithubActionsService {
   async triggerDestroyWorkflow(
     applicationConfig: { [key: string]: any },
     applicationId: string,
+    applicationEnvironment = 'aws',
   ) {
     try {
       const workflow_id = 'terraform_destroy.yml';
@@ -52,6 +55,7 @@ export class GithubActionsService {
         ref,
         inputs: {
           app_config: JSON.stringify(applicationConfig),
+          app_env: applicationEnvironment,
           app_id: applicationId,
         },
       });
