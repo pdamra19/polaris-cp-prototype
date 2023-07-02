@@ -78,6 +78,20 @@ resource "aws_security_group" "web-sg" {
   }
 }
 
+resource "aws_secretsmanager_secret" "instance-dns" {
+  name = "instance-dns/${var.app_id}"
+  recovery_window_in_days = 0
+  tags = {
+    Name = "Instance Public DNS"
+    ApplicationId = var.app_id
+  }
+}
+
+resource "aws_secretsmanager_secret_version" "application-secret-values" {
+  secret_id = aws_secretsmanager_secret.instance-dns.id
+  secret_string = jsonencode({ for name, instance in aws_instance.web : name => "${instance.public_dns}:8080" })
+}
+
 output "web-address" {
   description = "The Public DNS for each instance"
   value = { for name, instance in aws_instance.web : name => "${instance.public_dns}:8080" }
