@@ -44,11 +44,11 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.web-sg[each.key].id]
 
   tags = {
-    Name = "Polaris CP"
-    Description = "EC2 Instance to run ${each.key}"
-    ApplicationName = each.key
-    ComponentId = each.value.component_id
     ApplicationId = var.app_id
+    ApplicationName = "Polaris CP"
+    ComponentId = each.value.component_id
+    Description = "EC2 Instance to run ${each.key}"
+    Name = each.key
   }
 
   user_data = <<-EOF
@@ -81,11 +81,11 @@ resource "aws_security_group" "web-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "Polaris CP"
-    Description = "EC2 Instance Security Group"
     ApplicationId = var.app_id
-    ApplicationName = each.key
+    ApplicationName = "Polaris CP"
     ComponentId = each.value.component_id
+    Description = "EC2 Instance Security Group"
+    Name = each.key
   }
 }
 
@@ -93,9 +93,10 @@ resource "aws_secretsmanager_secret" "instance-dns" {
   name = "polaris/instance-dns/${var.app_id}"
   recovery_window_in_days = 0
   tags = {
-    Name = "Polaris CP"
-    Description = "Instance Public DNS"
     ApplicationId = var.app_id
+    ApplicationName = "Polaris CP"
+    Description = "Instance Public DNS"
+    Name = "Polaris CP DNS"
   }
 }
 
