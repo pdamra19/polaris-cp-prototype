@@ -92,7 +92,7 @@ resource "aws_secretsmanager_secret_version" "application-secret-values" {
   secret_string = jsonencode({ for name, instance in aws_instance.web : name => "${instance.public_dns}:8080" })
 }
 
-output "web-address" {
+output "instance-dns" {
   description = "The Public DNS for each instance"
   value = { for name, instance in aws_instance.web : name => "${instance.public_dns}:8080" }
 }
