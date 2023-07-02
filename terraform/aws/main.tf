@@ -17,74 +17,19 @@ provider "aws" {
   region = "us-east-1"
 }
 
-variable "app_config" {
-  type = map(object({
-    component_id = string
-    instance_type  = string
-    ami            = string
-  }))
-  description = "Map of applications to be deployed"
-}
-
-variable "app_id" {
-  type = string
-  description = "ID for this deployed application"
-}
-
-resource "aws_instance" "web" {
+module "components" {
+  source = "./modules"
   for_each = var.app_config
 
-  ami           = each.value.ami
+  component_id = each.value.component_id
   instance_type = each.value.instance_type
-
-  vpc_security_group_ids = [aws_security_group.web_sg[each.key].id]
-
-  tags = {
-    ApplicationId = var.app_id
-    ApplicationName = "Polaris CP"
-    ComponentId = each.value.component_id
-    Description = "EC2 Instance to run ${each.key}"
-    Name = each.key
-  }
-
-  user_data = <<-EOF
-              #!/bin/bash
-              apt-get update
-              apt-get install -y apache2
-              sed -i -e 's/80/8080/' /etc/apache2/ports.conf
-              echo "Hello from ${each.value.component_id} in App ${var.app_id}" > /var/www/html/index.html
-              systemctl restart apache2
-              EOF
+  ami = each.value.ami
+  app_id = var.app_id
+  component_name = each.key
 }
 
-resource "aws_security_group" "web_sg" {
-  for_each = var.app_config
-
-  name = "${each.key}-${each.value.component_id}-sg"
-  ingress {
-    from_port   = 8080
-    to_port     = 8080
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  // required for `apt-get update` and `apt-get install apache2`
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-  tags = {
-    ApplicationId = var.app_id
-    ApplicationName = "Polaris CP"
-    ComponentId = each.value.component_id
-    Description = "EC2 Instance Security Group"
-    Name = each.key
-  }
-}
-
-resource "aws_secretsmanager_secret" "instance-dns" {
-  name = "polaris/instance-dns/${var.app_id}"
+resource "aws_secretsmanager_secret" "instance_dns" {
+  name = "/polaris/instance-dns/${var.app_id}"
   recovery_window_in_days = 0
   tags = {
     ApplicationId = var.app_id
@@ -95,11 +40,13 @@ resource "aws_secretsmanager_secret" "instance-dns" {
 }
 
 resource "aws_secretsmanager_secret_version" "application-secret-values" {
-  secret_id = aws_secretsmanager_secret.instance-dns.id
-  secret_string = jsonencode({ for name, instance in aws_instance.web : name => "${instance.public_dns}:8080" })
+  secret_id = aws_secretsmanager_secret.instance_dns.id
+  secret_string = jsonencode({ for app, mod in module.compnents : app => mod.instance_dns })
 }
 
-output "instance-dns" {
-  description = "The Public DNS for each instance"
-  value = { for name, instance in aws_instance.web : name => "${instance.public_dns}:8080" }
+output "instance_dns" {
+  description = "The Public DNS for each component"
+  value = {
+    for app, mod in module.applications: app => mod.instance_dns
+  }
 }

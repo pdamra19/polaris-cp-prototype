@@ -3,7 +3,7 @@ import { AppService } from './app.service';
 import { GithubActionsService } from './github-actions/github-actions.service';
 
 const exampleConfig = {
-  VizVectar: {
+  Vectar: {
     component_id: 'viz1',
     instance_type: 't2.micro',
     ami: 'ami-003d3d03cfe1b0468',
