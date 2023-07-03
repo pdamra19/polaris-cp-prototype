@@ -22,8 +22,9 @@ locals {
 }
 
 module "components" {
-  source = "./modules"
   for_each = local.extended_app_config
+
+  source = "./modules/${each.key}"
   component_config = each.value
   app_id = var.app_id
 }
@@ -40,14 +41,14 @@ resource "aws_secretsmanager_secret" "instance_dns" {
   }
 }
 
-resource "aws_secretsmanager_secret_version" "application-secret-values" {
+resource "aws_secretsmanager_secret_version" "dns_values" {
   secret_id = aws_secretsmanager_secret.instance_dns.id
-  secret_string = jsonencode({ for app, mod in module.components : app => mod.instance_dns })
+  secret_string = jsonencode({ for name, mod in module.components : name => mod.instance_dns })
 }
 
 output "instance_dns" {
   description = "The Public DNS for each component"
   value = {
-    for app, mod in module.components: app => mod.instance_dns
+    for name, mod in module.components: name => mod.instance_dns
   }
 }
