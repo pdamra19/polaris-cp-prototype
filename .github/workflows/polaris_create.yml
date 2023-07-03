@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: "./terrform/${{github.event.inputs.app_env}}"
+        working-directory: "${{ github.workspace }}/terrform/${{github.event.inputs.app_env}}"
 
     permissions:
       id-token: write
