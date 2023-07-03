@@ -4,24 +4,52 @@ import { GithubActionsService } from './github-actions/github-actions.service';
 
 const exampleAppConfig = {
   Vectar: {
-    component_id: 'viz1',
-    instance_type: 't2.micro',
-    ami: 'ami-003d3d03cfe1b0468',
+    Primary: {
+      component_id: 'viz1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    Secondary: {
+      component_id: 'viz2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
   },
   Chyron: {
-    component_id: 'chyron1',
-    instance_type: 't2.micro',
-    ami: 'ami-003d3d03cfe1b0468',
+    Chyron1: {
+      component_id: 'chyron1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    Chyron2: {
+      component_id: 'chyron2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
   },
   TagVS: {
-    component_id: 'tagvs1',
-    instance_type: 't2.micro',
-    ami: 'ami-003d3d03cfe1b0468',
+    Manager: {
+      component_id: 'tagvs1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    Worker: {
+      component_id: 'tagvs2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
   },
   Telos: {
-    component_id: 'telos1',
-    instance_type: 't2.micro',
-    ami: 'ami-003d3d03cfe1b0468',
+    Application: {
+      component_id: 'telos1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    License: {
+      component_id: 'telos2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
   },
 };
 
@@ -35,7 +63,9 @@ export class AppController {
   ) {}
 
   @Get()
-  async getHello(): Promise<Record<string, Record<string, string>>> {
+  async getHello(): Promise<
+    Record<string, Record<string, Record<string, string>>>
+  > {
     await this.ghActionsService.triggerApplyWorkflow(
       exampleAppConfig,
       exampleApplicationId,
@@ -44,7 +74,9 @@ export class AppController {
   }
 
   @Delete()
-  async getGoodbye(): Promise<Record<string, Record<string, string>>> {
+  async getGoodbye(): Promise<
+    Record<string, Record<string, Record<string, string>>>
+  > {
     await this.ghActionsService.triggerDestroyWorkflow(
       exampleAppConfig,
       exampleApplicationId,
