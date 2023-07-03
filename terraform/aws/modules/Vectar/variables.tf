@@ -4,11 +4,11 @@ variable "app_id" {
 }
 
 variable "component_config" {
-  type = map(object({
+  type = object({
     ami            = string
     component_id = string
     component_name = string
     instance_type  = string
-  }))
+  })
   description = "Map of applications to be deployed"
 }

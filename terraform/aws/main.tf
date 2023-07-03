@@ -17,20 +17,21 @@ provider "aws" {
   region = "us-east-1"
 }
 
+locals {
+  extended_app_config = {for k, v in var.app_config : k => merge(v, {component_name = k})}
+}
+
 module "components" {
   source = "./modules"
-  for_each = var.app_config
-
-  component_id = each.value.component_id
-  instance_type = each.value.instance_type
-  ami = each.value.ami
+  for_each = var.extended_app_config
+  component_config = each.value
   app_id = var.app_id
-  component_name = each.key
 }
 
 resource "aws_secretsmanager_secret" "instance_dns" {
   name = "/polaris/instance-dns/${var.app_id}"
   recovery_window_in_days = 0
+
   tags = {
     ApplicationId = var.app_id
     ApplicationName = "Polaris CP"
@@ -41,7 +42,7 @@ resource "aws_secretsmanager_secret" "instance_dns" {
 
 resource "aws_secretsmanager_secret_version" "application-secret-values" {
   secret_id = aws_secretsmanager_secret.instance_dns.id
-  secret_string = jsonencode({ for app, mod in module.compnents : app => mod.instance_dns })
+  secret_string = jsonencode({ for app, mod in module.components : app => mod.instance_dns })
 }
 
 output "instance_dns" {
