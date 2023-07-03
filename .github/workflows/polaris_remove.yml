@@ -45,7 +45,7 @@ jobs:
 
     - name: Retrieve State S3 Bucket
       id: setup_resources
-      run: bash ../scripts/create_state_bucket.sh ${{ github.event.inputs.app_id }}
+      run: bash ../../scripts/create_state_bucket.sh ${{ github.event.inputs.app_id }}
 
     - name: Terraform Init
       run: terraform init  -backend-config="bucket=${{ steps.setup_resources.outputs.bucket_name}}" -backend-config="dynamodb_table=${{ steps.setup_resources.outputs.table_name }}"
