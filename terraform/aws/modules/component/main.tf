@@ -47,6 +47,6 @@ resource "aws_security_group" "web_sg" {
 }
 
 output "instance_dns" {
-  description = "The Public DNS for ${var.component_config.component_name} - ${var.component_config.component_id}"
+  description = "The Public DNS Address"
   value ="${aws_instance.web.public_dns}:8080"
 }
