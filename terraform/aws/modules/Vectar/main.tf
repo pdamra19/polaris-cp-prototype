@@ -5,7 +5,7 @@ resource "aws_instance" "web" {
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
   tags = {
-    ApplicationId = var.component_config.app_id
+    ApplicationId = var.app_id
     ApplicationName = "Polaris CP"
     ComponentId = var.component_config.component_id
     Description = "EC2 Instance to run ${var.component_config.component_name}"
