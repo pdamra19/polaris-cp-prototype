@@ -21,18 +21,16 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: "${{ github.workspace }}/terrform/${{github.event.inputs.app_env}}"
+    env:
+      TF_DIR: terraform/${{ inputs.app_env }}
+      SCRIPT_DIR: scripts
 
     permissions:
       id-token: write
       contents: read
       
     steps:
-    - name: Echo
-      run: echo "${{ github.workspace }}" && ls
-      
+
     - name: Checkout
       uses: actions/checkout@v2
 
@@ -43,21 +41,30 @@ jobs:
         role-duration-seconds: 1200
         aws-region: ${{ secrets.AWS_REGION }}
 
+    - uses: actions/setup-node@v2
+      with:
+        node-version: 16
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
     - name: Check and Create State S3 Bucket and DynamoDB Table
       id: setup_resources
-      run: bash "${{ github.workspace }}/scripts/create_state_bucket.sh ${{ github.event.inputs.app_id }}"
+      run: bash create_state_bucket.sh ${{ github.event.inputs.app_id }}
+      working-directory: ${{ env.SCRIPT_DIR }}
 
     - name: Terraform Init
       run: terraform init -backend-config="bucket=${{ steps.setup_resources.outputs.bucket_name}}" -backend-config="dynamodb_table=${{ steps.setup_resources.outputs.table_name }}"
+      working-directory: ${{ env.TF_DIR }}
 
     - name: Terraform Validate
       run: terraform validate
+      working-directory: ${{ env.TF_DIR }}
 
     - name: Terraform Plan
       run: terraform plan
+      working-directory: ${{ env.TF_DIR }}
 
     - name: Terraform Apply
       run: terraform apply -auto-approve
+      working-directory: ${{ env.TF_DIR }}
