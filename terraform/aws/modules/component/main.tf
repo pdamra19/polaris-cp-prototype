@@ -50,3 +50,14 @@ output "instance_dns" {
   description = "The Public DNS Address"
   value ="${aws_instance.web.public_dns}:8080"
 }
+
+# // TODO add NDI bridge infrastructure
+# // Includes NDI credentials with script in userdata
+# License server includes discovery server -> Needs to point to an existing NDI bridge (foundation) -> obtain bridge public IP
+
+# Separate modules for each product, pass in the bridge IP addy
+# Product modules in separate repos, can be versioned/deployed separately -> allow customer specific module per product
+# Use separate branches for differing configurations *per product*
+
+# // Grab IP from output and pass into later scripts - Multiple stage with dependency -> Need to dynamically build the userdata script
+# Passing output from one module to dependent modules - May need to copy script file with dynamic info
