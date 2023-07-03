@@ -3,7 +3,7 @@ variable "app_id" {
   description = "The UUID of the deployed application"
 }
 
-variable "component_config_map" {
+variable "component_config" {
   type = map(object({
     ami            = string
     component_id = string
