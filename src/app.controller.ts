@@ -2,7 +2,7 @@ import { Controller, Delete, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { GithubActionsService } from './github-actions/github-actions.service';
 
-const exampleConfig = {
+const exampleAppConfig = {
   Vectar: {
     component_id: 'viz1',
     instance_type: 't2.micro',
@@ -35,23 +35,20 @@ export class AppController {
   ) {}
 
   @Get()
-  async getHello(): Promise<string> {
-    const response = this.appService.getHello();
-
+  async getHello(): Promise<Record<string, Record<string, string>>> {
     await this.ghActionsService.triggerApplyWorkflow(
-      exampleConfig,
+      exampleAppConfig,
       exampleApplicationId,
     );
-    return response;
+    return exampleAppConfig;
   }
 
   @Delete()
-  async getGoodbye(): Promise<string> {
+  async getGoodbye(): Promise<Record<string, Record<string, string>>> {
     await this.ghActionsService.triggerDestroyWorkflow(
-      exampleConfig,
+      exampleAppConfig,
       exampleApplicationId,
     );
-    const response = this.appService.getHello();
-    return response;
+    return exampleAppConfig;
   }
 }
