@@ -22,9 +22,10 @@ locals {
 }
 
 module "components" {
+  source = "./modules/component"
+  
   for_each = local.extended_app_config
 
-  source = "./modules/${each.key}"
   component_config = each.value
   app_id = var.app_id
 }
