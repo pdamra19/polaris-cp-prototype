@@ -81,6 +81,6 @@ output "instance_dns" {
     Chyron: module.Chyron.instance_dns,
     TagVS: module.TagVS.instance_dns,
     Telos: module.Telos.instance_dns,
-    Vectar: module.instance_dns
+    Vectar: module.Vectar.instance_dns
   }
 }
