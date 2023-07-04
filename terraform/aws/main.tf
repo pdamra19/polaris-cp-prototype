@@ -18,7 +18,7 @@ provider "aws" {
 }
 
 locals {
-  extended_app_config = {for k, v in var.app_config : k => merge(v, {component_name = k})}
+  extended_app_config = {for k, v in var.app_config : k => { for key, val in var.app_config[k] : key => merge(val, {component_name = key}) } }
 }
 
 module "Vectar" {
