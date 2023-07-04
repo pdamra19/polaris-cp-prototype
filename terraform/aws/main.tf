@@ -49,6 +49,8 @@ resource "aws_secretsmanager_secret_version" "dns_values" {
 output "instance_dns" {
   description = "The Public DNS for each component"
   value = {
-    for name, mod in module.components: name => mod.instance_dns
+    Vectar: {
+      for name, mod in module.components: name => mod.instance_dns
+    }
   }
 }
