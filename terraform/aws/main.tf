@@ -29,9 +29,21 @@ module "Vectar" {
   app_id = var.app_id
 }
 
+resource "aws_secretsmanager_secret" "instance_dns" {
+  name = "/polaris/instance-dns/${var.app_id}"
+  recovery_window_in_days = 0
+
+  tags = {
+    ApplicationId = var.app_id
+    ApplicationName = "Polaris CP"
+    Description = "Instance Public DNS"
+    Name = "Polaris CP DNS"
+  }
+}
+
 resource "aws_secretsmanager_secret_version" "dns_values" {
   secret_id = aws_secretsmanager_secret.instance_dns.id
-  secret_string = jsonencode({ for name, mod in module.components : name => mod.instance_dns })
+  secret_string = jsonencode({ Vectar: { for name, mod in module.Vectar : name => mod.instance_dns } })
 }
 
 output "instance_dns" {
