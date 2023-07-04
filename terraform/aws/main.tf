@@ -21,6 +21,30 @@ locals {
   extended_app_config = {for k, v in var.app_config : k => { for key, val in var.app_config[k] : key => merge(val, {component_name = key}) } }
 }
 
+module "Chyron" {
+  source = "./modules/Chyron"
+  count = contains(keys(var.app_config), "Chyron") ? 1 : 0
+
+  component_config = local.extended_app_config["Chyron"]
+  app_id = var.app_id
+}
+
+module "TagVS" {
+  source = "./modules/TagVS"
+  count = contains(keys(var.app_config), "TagVS") ? 1 : 0
+
+  component_config = local.extended_app_config["TagVS"]
+  app_id = var.app_id
+}
+
+module "Telos" {
+  source = "./modules/Telos"
+  count = contains(keys(var.app_config), "Telos") ? 1 : 0
+
+  component_config = local.extended_app_config["Telos"]
+  app_id = var.app_id
+}
+
 module "Vectar" {
   source = "./modules/Vectar"
   count = contains(keys(var.app_config), "Vectar") ? 1 : 0
@@ -43,14 +67,20 @@ resource "aws_secretsmanager_secret" "instance_dns" {
 
 resource "aws_secretsmanager_secret_version" "dns_values" {
   secret_id = aws_secretsmanager_secret.instance_dns.id
-  secret_string = jsonencode({ Vectar: { for name, mod in module.Vectar : name => mod.instance_dns } })
+  secret_string = jsonencode({ 
+    Chyron: { for name, mod in module.Chyron : name => mod.instance_dns },
+    TagVS: { for name, mod in module.TagVS : name => mod.instance_dns },
+    Telos: { for name, mod in module.Telos : name => mod.instance_dns },
+    Vectar: { for name, mod in module.Vectar : name => mod.instance_dns },
+  })
 }
 
 output "instance_dns" {
   description = "The Public DNS for each component"
   value = {
-    Vectar: {
-      for name, mod in module.Vectar: name => mod.instance_dns
-    }
+    Chyron: { for name, mod in module.Chyron : name => mod.instance_dns },
+    TagVS: { for name, mod in module.TagVS : name => mod.instance_dns },
+    Telos: { for name, mod in module.Telos : name => mod.instance_dns },
+    Vectar: { for name, mod in module.Vectar : name => mod.instance_dns },
   }
 }
