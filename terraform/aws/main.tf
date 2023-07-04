@@ -50,7 +50,7 @@ output "instance_dns" {
   description = "The Public DNS for each component"
   value = {
     Vectar: {
-      for name, mod in module.components: name => mod.instance_dns
+      for name, mod in module.Vectar: name => mod.instance_dns
     }
   }
 }
