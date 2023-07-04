@@ -31,12 +31,12 @@ module "Vectar" {
 
 resource "aws_secretsmanager_secret_version" "dns_values" {
   secret_id = aws_secretsmanager_secret.instance_dns.id
-  secret_string = jsonencode({ for key, val in var.app_config : key => module[key].instance_dns })
+  secret_string = jsonencode({ for name, mod in module.components : name => mod.instance_dns })
 }
 
 output "instance_dns" {
   description = "The Public DNS for each component"
   value = {
-    for key, val in var.app_config: key => module[key].instance_dns
+    for name, mod in module.components: name => mod.instance_dns
   }
 }
