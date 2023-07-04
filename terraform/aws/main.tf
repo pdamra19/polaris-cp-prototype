@@ -68,19 +68,19 @@ resource "aws_secretsmanager_secret" "instance_dns" {
 resource "aws_secretsmanager_secret_version" "dns_values" {
   secret_id = aws_secretsmanager_secret.instance_dns.id
   secret_string = jsonencode({ 
-    Chyron: { for k, v in module.Chyron : k => v.instance_dns},
-    TagVS: { for k, v in module.TagVS : k => v.instance_dns},
-    Telos: { for k, v in module.Telos : k => v.instance_dns},
-    Vectar: { for k, v in module.Vectar : k => v.instance_dns}
+    Chyron: { for k, v in module.Chyron : k => v.instance_dns}[0],
+    TagVS: { for k, v in module.TagVS : k => v.instance_dns}[0],
+    Telos: { for k, v in module.Telos : k => v.instance_dns}[0],
+    Vectar: { for k, v in module.Vectar : k => v.instance_dns}[0]
   })
 }
 
 output "instance_dns" {
   description = "The Public DNS for each component"
   value = {
-    Chyron: { for k, v in module.Chyron : k => v.instance_dns},
-    TagVS: { for k, v in module.TagVS : k => v.instance_dns},
-    Telos: { for k, v in module.Telos : k => v.instance_dns},
-    Vectar: { for k, v in module.Vectar : k => v.instance_dns}
+    Chyron: { for k, v in module.Chyron : k => v.instance_dns }[0],
+    TagVS: { for k, v in module.TagVS : k => v.instance_dns }[0],
+    Telos: { for k, v in module.Telos : k => v.instance_dns }[0],
+    Vectar: { for k, v in module.Vectar : k => v.instance_dns }[0]
   }
 }
