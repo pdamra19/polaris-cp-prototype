@@ -9,7 +9,7 @@ resource "aws_instance" "web" {
     ApplicationName = "Polaris CP"
     ComponentId = var.component_config.component_id
     Description = "EC2 Instance to run ${var.component_config.component_name}"
-    Name = var.component_config.component_name
+    Name = "${var.component_config.component_name}-${var.app_id}"
   }
 
   user_data = <<-EOF
