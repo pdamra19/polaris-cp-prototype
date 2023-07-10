@@ -1,3 +1,88 @@
+# Polaris Media Cloud Control Plane Prototype
+
+## Description
+
+This project serves as a starting point/sandbox for the DMC backend application. The application will manage:
+
+- Creating/configuring Templates
+- Managing Product Configurations
+- Defining Workflows and the Workflow Steps they are composed of
+- Creating the relationships between Functional Roles
+- Executing and managing the state/status of Workflows and Workflow Steps
+- Triggering deployments at various stages of the Workflow
+
+## Deployment Functionality
+
+(WIP)
+
+As currently envisioned, the deployment process works as follows:
+
+1. Based on the selected Template, and user-entered configuration, a Workflow is created
+2. The workflow consists of one or more Deployment Steps
+3. The Deployment details are dynamic, and are represented by a data model that is expressed as JSON
+4. Each Product supported by the Application is defined as one or more Terraform modules
+5. The data model contains the configuration details for each Product Deployment
+  - Instance configuration
+  - License info (entered by user or derived from previous Workflow step actions)
+  - Names and unique IDs for components within the deployment
+  - Anything needed to deploy the product successfully
+6. An example configuration looks like this: 
+
+```
+{
+  Vectar: {
+    Primary: {
+      component_id: 'viz1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    Secondary: {
+      component_id: 'viz2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+  },
+  Chyron: {
+    Chyron1: {
+      component_id: 'chyron1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    Chyron2: {
+      component_id: 'chyron2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+  },
+  TagVS: {
+    Manager: {
+      component_id: 'tagvs1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    Worker: {
+      component_id: 'tagvs2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+  },
+  Telos: {
+    Application: {
+      component_id: 'telos1',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+    License: {
+      component_id: 'telos2',
+      instance_type: 't2.micro',
+      ami: 'ami-003d3d03cfe1b0468',
+    },
+  },
+}
+```
+
+--
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
