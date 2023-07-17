@@ -1,6 +1,26 @@
 version: '3.7'
 
 services:
+  polaris-cp-api:
+    depends_on: 
+      - polaris-cp-pg
+    env_file:
+      - ./.env
+    build:
+      context: .
+      target: development
+      dockerfile: Dockerfile
+    command: npm run start:dev
+    environment: 
+      - PGHOST=polaris-cp-pg
+      - ADDRESS=0.0.0.0
+    ports:
+      - 4000:4000
+    networks:
+      - polaris-cp-network
+    volumes:
+      - ./:/usr/src/app
+
   polaris-cp-pg:
     container_name: polaris-cp-pg
     image: postgres:13
@@ -11,8 +31,12 @@ services:
       PG_DATA: /var/lib/postgresql/data
     ports:
       - 5432:5432
+    networks:
+      - polaris-cp-network
     volumes:
       - polaris-cp-pgdata:/var/lib/postgresql/data
 
+networks:
+  polaris-cp-network:
 volumes:
   polaris-cp-pgdata:

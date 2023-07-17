@@ -2,7 +2,7 @@ import { Controller, Delete, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { GithubActionsService } from './github-actions/github-actions.service';
 
-const exampleAppConfig = {
+export const exampleAppConfig = {
   Vectar: {
     Primary: {
       component_id: 'viz1',
