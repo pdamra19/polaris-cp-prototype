@@ -26,6 +26,7 @@
     "migration:show": "npm run typeorm -- -d ./ormconfig.ts migration:show"
   },
   "dependencies": {
+    "@aws-sdk/client-ecs": "^3.370.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.0.0",
     "@nestjs/core": "^10.0.0",

@@ -8,6 +8,7 @@ import databaseConfig, { databases } from './common/config/database.config';
 import { TemplatesModule } from './templates/templates.module';
 import { GithubActionsModule } from './github-actions/github-actions.module';
 import { ProductsModule } from './products/products.module';
+import { IacTaskModule } from './iac-task/iac-task.module';
 
 export const appModuleDocumentation = (app: INestApplication): void => {
   const options = new DocumentBuilder()
@@ -35,6 +36,7 @@ export const appModuleDocumentation = (app: INestApplication): void => {
     TemplatesModule,
     GithubActionsModule,
     ProductsModule,
+    IacTaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],
